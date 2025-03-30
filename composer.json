@@ -1,5 +1,5 @@
 {
-    "name": "psliwa/pdf-bundle",
+    "name": "tsifra/pdf-bundle",
     "description": "This bundle integrates Symfony 3.4/4 with PHPPdf library.",
     "keywords": ["PDF", "PHPPdf"],
     "type": "symfony-bundle",
