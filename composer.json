@@ -17,7 +17,6 @@
     },
     "require": {
         "php": "^7.4|^8.1",
-        "doctrine/annotations": "^1.0",
         "tsifra/php-pdf": "*",
         "symfony/config": "^3.4|^4.0|^5.0|^6.0|^7.0",
         "symfony/dependency-injection": "^3.4|^4.0|^5.0|^6.0|^7.0",
