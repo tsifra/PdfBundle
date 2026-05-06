@@ -8,7 +8,7 @@
 
 namespace Ps\PdfBundle\Annotation;
 
-use Doctrine\Common\Annotations\Annotation;
+use Attribute;
 
 /**
  * Pdf annotation.
@@ -17,6 +17,8 @@ use Doctrine\Common\Annotations\Annotation;
  *
  * @author Piotr Śliwa <peter.pl7@gmail.com>
  */
+
+#[Attribute(Attribute::TARGET_CLASS)]
 class Pdf
 {
     public $stylesheet;
