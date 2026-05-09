@@ -10,6 +10,7 @@ namespace Ps\PdfBundle\Twig\Extensions\Extension;
 
 use Ps\PdfBundle\Templating\ImageLocatorInterface;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Twig extension.
@@ -28,7 +29,7 @@ class PdfExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('pdf_image', [$this, 'getImagePath']),
+            new TwigFunction('pdf_image', [$this, 'getImagePath']),
         ];
     }
 
