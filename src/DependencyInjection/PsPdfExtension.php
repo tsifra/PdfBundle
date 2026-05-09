@@ -89,7 +89,7 @@ class PsPdfExtension extends Extension
         return false;
     }
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'ps_pdf';
     }
