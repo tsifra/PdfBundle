@@ -13,7 +13,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 
 /**
  * Extenstion class.
@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class PsPdfExtension extends Extension
 {
-    public function load(array $config, ContainerBuilder $container)
+    public function load(array $config, ContainerBuilder $container): void
     {
         $config = $this->getConfig($config);
 
@@ -79,12 +79,12 @@ class PsPdfExtension extends Extension
         }
     }
 
-    public function getNamespace()
+    public function getNamespace(): string
     {
         return 'http://ohey.pl/phppdf/schema/dic/'.$this->getAlias();
     }
 
-    public function getXsdValidationBasePath()
+    public function getXsdValidationBasePath(): string|false
     {
         return false;
     }
