@@ -8,14 +8,14 @@
 
 namespace Ps\PdfBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * Register a new 'pdf' format associated to mime type pdf.
  */
 class PdfRequestListener
 {
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         $request = $event->getRequest();
         $request->setFormat('pdf', 'application/pdf');
