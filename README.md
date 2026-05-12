@@ -1,3 +1,5 @@
+adopted to symfony7
+
 PsPdfBundle
 ===========
 
