@@ -1,0 +1,86 @@
+parameters:
+    ps_pdf.nodes_file: null
+    ps_pdf.complex_attributes_file: null
+    ps_pdf.fonts_file: null
+    ps_pdf.colors_file: null
+    ps_pdf.cache.type: File
+    ps_pdf.cache.options:
+        cache_dir: '%kernel.cache_dir%'
+    ps_pdf.use_cache_in_stylesheet: true
+    ps_pdf.markdown_stylesheet_filepath: null
+    ps_pdf.markdown_document_template_filepath: null
+    ps_pdf.document_parser_type: xml
+    ps_pdf.string_filter.bundle_based.class: 'Ps\PdfBundle\PHPPdf\Util\BundleBasedStringFilter'
+
+services:
+    ps_pdf.facade:
+        class: 'PHPPdf\Core\Facade'
+
+    ps_pdf.loader:
+        class: 'PHPPdf\Core\Configuration\LoaderImpl'
+        public: false # Делаем приватным, если он нужен только внутри контейнера
+        arguments:
+            - '%ps_pdf.nodes_file%'
+            - '%ps_pdf.complex_attributes_file%'
+            - '%ps_pdf.fonts_file%'
+            - '%ps_pdf.colors_file%'
+
+    ps_pdf.facade_builder:
+        class: 'PHPPdf\Core\FacadeBuilder'
+        arguments:
+            # Анонимный сервис (LoaderImpl)
+            - '@ps_pdf.loader'
+        calls:
+            - [addStringFilter, ['@ps_pdf.string_filter.bundle_based']]
+            - [setCache, ['%ps_pdf.cache.type%', '%ps_pdf.cache.options%']]
+            - [setUseCacheForStylesheetConstraint, ['%ps_pdf.use_cache_in_stylesheet%']]
+            - [setMarkdownStylesheetFilepath, ['%ps_pdf.markdown_stylesheet_filepath%']]
+            - [setMarkdownDocumentTemplateFilepath, ['%ps_pdf.markdown_document_template_filepath%']]
+            - [setDocumentParserType, ['%ps_pdf.document_parser_type%']]
+
+    ps_pdf.string_filter.bundle_based:
+        class: '%ps_pdf.string_filter.bundle_based.class%'
+        public: false
+        arguments:
+            - '@?kernel' # on-invalid="ignore" преобразуется в @?
+
+    ps_pdf.listener:
+        class: 'Ps\PdfBundle\EventListener\PdfListener'
+        arguments:
+            - '@ps_pdf.facade_builder'
+            - '@annotation_reader'
+            - '@ps_pdf.reflection_factory'
+            - '@twig'
+            - '@ps_pdf.cache'
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: 1000 }
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 1000 }
+
+    ps_pdf.request_listener:
+        class: 'Ps\PdfBundle\EventListener\PdfRequestListener'
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    ps_pdf.reflection_factory:
+        class: 'Ps\PdfBundle\Reflection\Factory'
+        public: false
+
+    ps_pdf.twig.pdf_extension:
+        class: 'Ps\PdfBundle\Twig\Extensions\Extension\PdfExtension'
+        public: false
+        arguments:
+            - '@ps_pdf.templating.image_locator'
+        tags:
+            - { name: twig.extension }
+
+    ps_pdf.templating.image_locator:
+        class: 'Ps\PdfBundle\Templating\ImageLocator'
+        public: false
+        arguments:
+            - '@kernel'
+
+    ps_pdf.cache:
+        class: 'PHPPdf\Cache\CacheImpl'
+        arguments:
+            - '%ps_pdf.cache.type%'
+            - '%ps_pdf.cache.options%'
